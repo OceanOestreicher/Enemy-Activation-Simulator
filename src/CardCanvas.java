@@ -3,23 +3,6 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class CardCanvas extends JPanel {
-
-    /*
-    public CardCanvas(){
-        setIgnoreRepaint(true);
-        rh = new HashMap<>();
-        rh.put(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        rh.put(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
-    }
-    public void init(Image[] cards){
-        createBufferStrategy(2);
-        doubleBuffer = getBufferStrategy();
-        animationTimer = new Timer(1, this);
-        for(int i = 0; i < cards.length;i++){
-            cards[i]=cards[i].getScaledInstance(this.getWidth(),this.getHeight(),Image.SCALE_SMOOTH);
-        }
-    }
-     */
     private final HashMap<RenderingHints.Key,Object> renderingHints;
     private Image currentCard;
     private int x = 0, y =0;
