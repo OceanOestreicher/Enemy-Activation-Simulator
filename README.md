@@ -11,9 +11,11 @@ Features
      - R will reset the program or remove one of the in play reaction cards
      - S will cycle which boss phase is displayed
      - Up and Down arrow keys will select which deck you are playing with
+     - Left clicking on a boss card will add damage tokens, right clicking removes them
        
 - Automatic save stating if you close the program
 - Easy ability to add more decks without any code changes
+- Track damage done to bosses or reaction cards
 
 Screenshots
 -----------
@@ -25,6 +27,9 @@ Screenshots
 
 - In play boss 
 ![](Screenshots/3.png)
+
+- Damaged boss and reaction card
+  ![](Screenshots/5.png)
 
 - In play normal deck
   
