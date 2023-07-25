@@ -2,7 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -29,6 +32,7 @@ public class StateManager implements ActionListener {
     private boolean isBoss,switchedPhase,active;
     private ArrayList<Image> selectedDeck;
     private HashSet<Integer> drawnCards, activeReactionaryCards,discardedReactionaryCards;
+    private HashMap<Integer,Integer> damagedCards;
     private final CyclingList reactionaryCardIndices;
     private final Random rand;
     private final MainFrame root;
@@ -44,6 +48,7 @@ public class StateManager implements ActionListener {
         activeReactionaryCards = new HashSet<>();
         discardedReactionaryCards = new HashSet<>();
         reactionaryCardIndices = new CyclingList();
+        damagedCards = new HashMap<>();
     }
     public void addComboBox(JComboBox<String>box,String type){
         box.addActionListener(this);
@@ -79,7 +84,7 @@ public class StateManager implements ActionListener {
         switch (type) {
             case MAIN_CANVAS -> mainCanvas = canvas;
             case BOSS_REFERENCE_CANVAS -> bossReferenceCanvas = canvas;
-            case REACTIONARY_CANVAS -> bossReactionCanvas = canvas;
+            case REACTIONARY_CANVAS ->bossReactionCanvas = canvas;
             default -> throw new RuntimeException("Invalid Canvas Type");
         }
     }
@@ -208,13 +213,49 @@ public class StateManager implements ActionListener {
     public void setLastDrawnIndex(int last){
         lastDrawnIndex = last;
     }
+    public ArrayList<Integer[]>getDamagedCards(){
+        if(damagedCards.size() == 0 && (bossReactionCanvas.getDamage() > 0 || bossReferenceCanvas.getDamage()>0)){
+            if(bossReferenceCanvas.getDamage()>0){
+                damagedCards.put(0,bossReferenceCanvas.getDamage());
+            }
+            if(bossReactionCanvas.getDamage()>0){
+                damagedCards.put(reactionaryCardIndices.getCurrentVal(),bossReactionCanvas.getDamage());
+            }
+        }
+        else if(damagedCards.size()==0) return new ArrayList<>();
+        ArrayList<Integer[]>contents = new ArrayList<>();
+        for(int i = 0; i <2;i++){
+            if(damagedCards.get(i)!=null){
+                Integer[]pair = new Integer[2];
+                pair[0] = i;
+                pair[1] = damagedCards.get(i);
+                contents.add(pair);
+            }
+        }
+        for(Integer i: reactionaryCardIndices.toArray()){
+            Integer[] pair = new Integer[2];
+            pair[0] = i;
+            pair[1] = damagedCards.get(i);
+            contents.add(pair);
+        }
+        return contents;
+    }
+    public void setDamagedCards(ArrayList<Integer[]> data){
+        for(Integer[] pair: data){
+            damagedCards.put(pair[0],pair[1]);
+        }
+    }
     public void restoreState(){
+        bossReactionCanvas.setDamage(damagedCards.get(reactionaryCardIndices.getCurrentVal()));
         updateReactionaryComponents();
         updateLabel(deckCountLabel);
         updateLabel(deckCycleLabel);
         updateLabel(reactionCountLabel);
         paintCanvas(mainCanvas,selectedDeck.get(lastDrawnIndex));
-        if(isBoss)paintCanvas(bossReferenceCanvas,selectedDeck.get(0));
+        if(isBoss){
+            bossReferenceCanvas.setDamage(damagedCards.get(0));
+            paintCanvas(bossReferenceCanvas,selectedDeck.get(0));
+        }
         root.displayBossPanel(isBoss);
         startScenario();
     }
@@ -372,16 +413,22 @@ public class StateManager implements ActionListener {
                 Loader.deleteState();
             }
             case "Next Reactionary"->{
+                damagedCards.put(reactionaryCardIndices.getCurrentVal(),bossReactionCanvas.getDamage());
                 reactionaryCardIndices.move(CyclingList.RIGHT);
+                bossReactionCanvas.setDamage(damagedCards.get(reactionaryCardIndices.getCurrentVal()));
                 updateReactionaryComponents();
             }
             case "Remove Reactionary"->{
                 discardedReactionaryCards.add(reactionaryCardIndices.getCurrentVal());
                 activeReactionaryCards.remove(reactionaryCardIndices.getCurrentVal());
+                damagedCards.remove(reactionaryCardIndices.getCurrentVal());
                 reactionaryCardIndices.remove();
+                bossReactionCanvas.setDamage(damagedCards.get(reactionaryCardIndices.getCurrentVal()));
                 updateReactionaryComponents();
             }
             case "Switch Phase"->{
+                damagedCards.put((!switchedPhase?0:1),bossReferenceCanvas.getDamage());
+                bossReferenceCanvas.setDamage(damagedCards.get(switchedPhase?0:1));
                 paintCanvas(bossReferenceCanvas,(switchedPhase?selectedDeck.get(0):selectedDeck.get(1)));
                 switchedPhase = !switchedPhase;
             }

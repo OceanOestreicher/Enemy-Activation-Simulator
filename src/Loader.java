@@ -26,6 +26,25 @@ public class Loader {
         if(decks==null)loadDecks();
         return decks;
     }
+    public static Image[] getDamageGraphics(){
+        try{
+            Image[] results = new Image[2];
+            File dir = new File("./Graphics");
+            int index = 0;
+            for(File f: Objects.requireNonNull(dir.listFiles())){
+                if(f.getName().contains("Damage")){
+                    results[index] = ImageIO.read(f);
+                    index++;
+                }
+            }
+            return results;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        return null;
+    }
     public static void loadState(StateManager currentState){
         try{
             Scanner fin = new Scanner(new File("save.dat"));
@@ -93,6 +112,18 @@ public class Loader {
                         case 7->{
                             currentState.setLastDrawnIndex(Integer.parseInt(line));
                         }
+                        case 8->{
+                            //[0, 1][8, 2]
+                            ArrayList<Integer[]>damaged = new ArrayList<>();
+                            String[]elements = line.split("]\\[");
+                            for(String s: elements){
+                                s = s.replaceAll("[\\[\\] ]","");
+                                String[] stringPair = s.split(",");
+                                Integer[]pair = new Integer[]{Integer.parseInt(stringPair[0]),Integer.parseInt(stringPair[1])};
+                                damaged.add(pair);
+                            }
+                            currentState.setDamagedCards(damaged);
+                        }
                         default->{
                             throw new RuntimeException(".dat file is wrong size");
                         }
@@ -141,6 +172,10 @@ public class Loader {
             }
             fout.println();
             fout.println(currentState.getLastDrawnIndex());
+            for(Integer[]pair: currentState.getDamagedCards()){
+                fout.print(Arrays.toString(pair));
+            }
+            fout.println();
             fout.flush();
             fout.close();
 

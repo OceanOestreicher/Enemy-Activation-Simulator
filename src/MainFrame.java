@@ -41,18 +41,17 @@ public class MainFrame extends JFrame {
         reactionLowerPanel.setBackground(Color.DARK_GRAY);
         bossPanel.add(reactionMainPanel);
 
-
-
         //Canvas'
-        CardCanvas mainCanvas = new CardCanvas();
+        Image[] damageGraphics = Loader.getDamageGraphics();
+        CardCanvas mainCanvas = new CardCanvas(damageGraphics,false);
         int screenWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth());
         mainCanvas.setPreferredSize(new Dimension(screenWidth /4,(int)((screenWidth /4)*.75)));
         mainCanvas.setBackground(Color.BLACK);
         mainCanvas.setBorder(new EmptyBorder(5,5,5,5));
-        CardCanvas bossReferenceCanvas = new CardCanvas();
+        CardCanvas bossReferenceCanvas = new CardCanvas(damageGraphics,true);
         bossReferenceCanvas.setBackground(Color.DARK_GRAY);
         bossReferenceCanvas.setPreferredSize(new Dimension((int)((screenWidth /6)*.75),(screenWidth /6)));
-        CardCanvas reactionaryCanvas = new CardCanvas();
+        CardCanvas reactionaryCanvas = new CardCanvas(damageGraphics,true);
         reactionaryCanvas.setBackground(Color.DARK_GRAY);
         reactionaryCanvas.setPreferredSize(new Dimension((int)((screenWidth /6)*.75),(screenWidth /6)));
         stateManager.addCanvas(mainCanvas, StateManager.MAIN_CANVAS);
