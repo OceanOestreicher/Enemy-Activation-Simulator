@@ -1,5 +1,5 @@
 # Enemy-Activation-Simulator
-A Graphical User Interface for testing out enemy activation deck and boss configurations for my boardgame, Lockdown.
+A Graphical User Interface for rapid prototyping of some of the enemy action decks for my boardgame, Lockdown.
 
 Features
 ---------
