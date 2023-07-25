@@ -16,9 +16,6 @@ public class CardCanvas extends JPanel {
         currentCard = null;
         repaint();
     }
-    public boolean isPainted(){
-        return currentCard != null;
-    }
     private boolean isDifferentOrientation(int cardWidth,int cardHeight){
         if(cardWidth < cardHeight && this.getWidth() > this.getHeight() || cardWidth > cardHeight && this.getWidth() < this.getHeight())return true;
         return false;
