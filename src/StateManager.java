@@ -214,15 +214,8 @@ public class StateManager implements ActionListener {
         lastDrawnIndex = last;
     }
     public ArrayList<Integer[]>getDamagedCards(){
-        if(damagedCards.size() == 0 && (bossReactionCanvas.getDamage() > 0 || bossReferenceCanvas.getDamage()>0)){
-            if(bossReferenceCanvas.getDamage()>0){
-                damagedCards.put(0,bossReferenceCanvas.getDamage());
-            }
-            if(bossReactionCanvas.getDamage()>0){
-                damagedCards.put(reactionaryCardIndices.getCurrentVal(),bossReactionCanvas.getDamage());
-            }
-        }
-        else if(damagedCards.size()==0) return new ArrayList<>();
+        damagedCards.put((switchedPhase?1:0),bossReferenceCanvas.getDamage());
+        if(reactionaryCardIndices.size() > 0)damagedCards.put(reactionaryCardIndices.getCurrentVal(),bossReactionCanvas.getDamage());
         ArrayList<Integer[]>contents = new ArrayList<>();
         for(int i = 0; i <2;i++){
             if(damagedCards.get(i)!=null){
@@ -246,13 +239,13 @@ public class StateManager implements ActionListener {
         }
     }
     public void restoreState(){
-        bossReactionCanvas.setDamage(damagedCards.get(reactionaryCardIndices.getCurrentVal()));
-        updateReactionaryComponents();
         updateLabel(deckCountLabel);
         updateLabel(deckCycleLabel);
-        updateLabel(reactionCountLabel);
         paintCanvas(mainCanvas,selectedDeck.get(lastDrawnIndex));
         if(isBoss){
+            bossReactionCanvas.setDamage(damagedCards.get(reactionaryCardIndices.getCurrentVal()));
+            updateReactionaryComponents();
+            updateLabel(reactionCountLabel);
             bossReferenceCanvas.setDamage(damagedCards.get(0));
             paintCanvas(bossReferenceCanvas,selectedDeck.get(0));
         }
@@ -292,6 +285,7 @@ public class StateManager implements ActionListener {
         active = false;
 
         drawnCards.clear();
+        damagedCards.clear();
         discardedReactionaryCards.clear();
         activeReactionaryCards.clear();
         reactionaryCardIndices.clear();
@@ -423,7 +417,7 @@ public class StateManager implements ActionListener {
                 activeReactionaryCards.remove(reactionaryCardIndices.getCurrentVal());
                 damagedCards.remove(reactionaryCardIndices.getCurrentVal());
                 reactionaryCardIndices.remove();
-                bossReactionCanvas.setDamage(damagedCards.get(reactionaryCardIndices.getCurrentVal()));
+                if(reactionaryCardIndices.size() > 0)bossReactionCanvas.setDamage(damagedCards.get(reactionaryCardIndices.getCurrentVal()));
                 updateReactionaryComponents();
             }
             case "Switch Phase"->{

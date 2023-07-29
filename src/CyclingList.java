@@ -17,6 +17,7 @@ public class CyclingList {
         return size;
     }
     public int getCurrentVal(){
+        if(current == null)return -1;
         return current.data;
     }
     public int getCurrentPosition(){

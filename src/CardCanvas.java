@@ -9,7 +9,6 @@ public class CardCanvas extends JPanel {
     private Image currentCard,oneDamage,fiveDamage;
     private int x = 0, y =0,damage=0;
     public CardCanvas(Image[]damageGraphics,boolean enableDamage){
-        setIgnoreRepaint(true);
         renderingHints = new HashMap<>();
         renderingHints.put(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         renderingHints.put(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
@@ -32,6 +31,7 @@ public class CardCanvas extends JPanel {
                                 paintCard(currentCard);
                             }
                         }
+
                     }
 
                 }

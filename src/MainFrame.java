@@ -18,13 +18,6 @@ public class MainFrame extends JFrame {
         mainUpperPanel.setBackground(Color.DARK_GRAY);
         JPanel mainLowerPanel = new JPanel();
         mainLowerPanel.setBackground(Color.DARK_GRAY);
-        mainLowerPanel.setLayout(new GridLayout(1,2));
-        JPanel fillerLowerPanel = new JPanel();
-        fillerLowerPanel.setBackground(Color.DARK_GRAY);
-        mainLowerPanel.add(fillerLowerPanel);
-        JPanel lowerControlPanel = new JPanel();
-        lowerControlPanel.setBackground(Color.DARK_GRAY);
-        mainLowerPanel.add(lowerControlPanel);
         bossPanel = new JPanel();
         bossPanel.setBackground(Color.DARK_GRAY);
         bossPanel.setLayout(new GridLayout(1,2));
@@ -45,15 +38,15 @@ public class MainFrame extends JFrame {
         Image[] damageGraphics = Loader.getDamageGraphics();
         CardCanvas mainCanvas = new CardCanvas(damageGraphics,false);
         int screenWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth());
-        mainCanvas.setPreferredSize(new Dimension(screenWidth /4,(int)((screenWidth /4)*.75)));
+        mainCanvas.setPreferredSize(new Dimension(screenWidth /3,(int)((screenWidth /3)*.75)));
         mainCanvas.setBackground(Color.BLACK);
         mainCanvas.setBorder(new EmptyBorder(5,5,5,5));
         CardCanvas bossReferenceCanvas = new CardCanvas(damageGraphics,true);
         bossReferenceCanvas.setBackground(Color.DARK_GRAY);
-        bossReferenceCanvas.setPreferredSize(new Dimension((int)((screenWidth /6)*.75),(screenWidth /6)));
+        bossReferenceCanvas.setPreferredSize(new Dimension((int)((screenWidth /5)*.75),(screenWidth /5)));
         CardCanvas reactionaryCanvas = new CardCanvas(damageGraphics,true);
         reactionaryCanvas.setBackground(Color.DARK_GRAY);
-        reactionaryCanvas.setPreferredSize(new Dimension((int)((screenWidth /6)*.75),(screenWidth /6)));
+        reactionaryCanvas.setPreferredSize(new Dimension((int)((screenWidth /5)*.75),(screenWidth /5)));
         stateManager.addCanvas(mainCanvas, StateManager.MAIN_CANVAS);
         stateManager.addCanvas(bossReferenceCanvas, StateManager.BOSS_REFERENCE_CANVAS);
         stateManager.addCanvas(reactionaryCanvas, StateManager.REACTIONARY_CANVAS);
@@ -117,10 +110,10 @@ public class MainFrame extends JFrame {
         mainUpperPanel.add(decks);
         mainUpperPanel.add(start);
 
-        lowerControlPanel.add(deckCycle);
-        lowerControlPanel.add(reset);
-        lowerControlPanel.add(draw);
-        lowerControlPanel.add(deckCount);
+        mainLowerPanel.add(deckCycle);
+        mainLowerPanel.add(reset);
+        mainLowerPanel.add(draw);
+        mainLowerPanel.add(deckCount);
 
         referenceLowerPanel.add(switchPhase);
 
@@ -166,13 +159,15 @@ public class MainFrame extends JFrame {
         add(mainDisplay);
         pack();
         setVisible(true);
-        setLocationRelativeTo(null);
+        setResizable(false);
+        setLocation(screenWidth/6,Toolkit.getDefaultToolkit().getScreenSize().height/4);
         setTitle("Enemy Activation Simulator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getRootPane().setDefaultButton(draw);
 
         alphaReferenceFrame = new JFrame("Alpha Reference");
         alphaReferenceFrame.add(bossPanel);
+        alphaReferenceFrame.setResizable(false);
         alphaReferenceFrame.pack();
         alphaReferenceFrame.setVisible(true);
         alphaReferenceFrame.setLocation(this.getX()+this.getWidth(),this.getY());
